@@ -39,7 +39,6 @@
       ],
       "settings": {
         "image": "shopify://shop_images/environmental-day-banner-design_645733-692_1.jpg",
-        "image_2": "shopify://shop_images/world-environment-day-banner-design_645733-645.jpg",
         "image_overlay_opacity": 40,
         "image_height": "large",
         "image_behavior": "none",
