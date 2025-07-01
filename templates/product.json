@@ -79,7 +79,8 @@
         "hide_variants": true,
         "enable_video_looping": false,
         "padding_top": 36,
-        "padding_bottom": 12
+        "padding_bottom": 12,
+        "emable_media_swiper": true
       }
     },
     "related-products": {
@@ -108,11 +109,22 @@
         "heading": "You may also like",
         "quick_add": "standard"
       }
+    },
+    "customer_reviews_XzAxn6": {
+      "type": "customer-reviews",
+      "name": "Customer Reviews",
+      "settings": {
+        "mt_desktop": 32,
+        "mb_desktop": 32,
+        "mt_mobile": 24,
+        "mb_mobile": 24
+      }
     }
   },
   "order": [
     "main",
     "related-products",
-    "you_may_also_like_eggkKR"
+    "you_may_also_like_eggkKR",
+    "customer_reviews_XzAxn6"
   ]
 }
