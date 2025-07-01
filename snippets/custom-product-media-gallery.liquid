@@ -12,6 +12,11 @@
 .images_custom_pdp .swiper-pagination-bullet-active{
 background-color: #000 !important;
 }
+.media_gallery.swiper-pagination{
+    position: relative;
+    top: unset;
+    bottom: 0;
+}
  </style>
 
  <div class="images_custom_pdp">
@@ -23,7 +28,7 @@ background-color: #000 !important;
         </div>
       {% endfor %}
       </div>
-      <div class="swiper-pagination"></div>
+      <div class="media_gallery swiper-pagination"></div>
     </div>
   </div>
   <script>

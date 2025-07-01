@@ -1,0 +1,184 @@
+<style>
+  #section-{{ section.id }} {
+    margin-top: {{ section.settings.mt_desktop }}px;
+    margin-bottom: {{ section.settings.mb_desktop }}px;
+  }
+  @media screen and (max-width: 749px) {
+    #section-{{ section.id }} {
+      margin-top: {{ section.settings.mt_mobile }}px;
+      margin-bottom: {{ section.settings.mb_mobile }}px;
+    }
+  }
+  #section-{{ section.id }} .reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #section-{{ section.id }} .reviews-swiper-buttons {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    #section-{{ section.id }} .reviews-swiper-prev,
+    #section-{{ section.id }} .reviews-swiper-next {
+          display: flex;
+    width: unset;
+    height: unset;
+    padding: 10px;
+    position: unset;
+    color: black;
+    border: 1px solid black;
+    border-radius: 50%;
+    z-index: 1;
+  }
+  #section-{{ section.id }} .reviews-swiper-prev:after,
+  #section-{{ section.id }} .reviews-swiper-next:after {
+    content: none;
+  }
+  #section-{{ section.id }} .review {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid black;
+  }
+  #section-{{ section.id }} .review-stars {
+    font-size: 1.2rem;
+    margin-bottom: .4rem;
+  }
+  #section-{{ section.id }} .star {
+    color: #ccc;
+  }
+  #section-{{ section.id }} .star.filled {
+    color: #FFD700;
+  }
+  #section-{{ section.id }} .review-text {
+    font-style: italic;
+    margin-bottom: .2rem;
+    margin: 0;
+  }
+  #section-{{ section.id }} .review-author {
+    margin: 0;
+    font-weight: 600;
+    color: #555;
+  }
+</style>
+
+<section id="section-{{ section.id }}" class="page-width">
+  {%- assign reviews = product.metafields.custom.customer_reviews.value -%}
+  {% if reviews and reviews.size > 0 %}
+    <div class="reviews-header">
+      <h2>Customer Reviews</h2>
+      <div class="reviews-swiper-buttons">
+        <div class="swiper-button-prev reviews-swiper-prev">
+          <img src="https://cdn.shopify.com/s/files/1/0693/9885/5871/files/icons8-back-50.png?v=1751403150" alt="Prev" style="width:15px;height:15px;">
+        </div>
+        <div class="swiper-button-next reviews-swiper-next">
+          <img src="https://cdn.shopify.com/s/files/1/0693/9885/5871/files/icons8-forward-50.png?v=1751403151" alt="Next" style="width:15px;height:15px;">
+        </div>
+      </div>
+    </div>
+
+    <div class="swiper reviews-swiper">
+      <div class="swiper-wrapper">
+        {%- for entry in reviews -%}
+          {%- assign parts = entry | split: '##' -%}
+          {%- assign author = parts[0] | strip -%}
+          {%- assign text = parts[1] | strip -%}
+          {%- assign rating = parts[2] | strip | plus: 0 -%}
+          <div class="swiper-slide">
+            <div class="review">
+                <p class="review-text">“{{ text }}”</p>
+                <div class="review-stars">
+                  {% for i in (1..5) %}
+                    <span class="star{% if i <= rating %} filled{% endif %}">&#9733;</span>
+                  {% endfor %}
+                </div>
+              <p class="review-author">— {{ author }}</p>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    new Swiper('#section-{{ section.id }} .reviews-swiper', {
+      slidesPerView: 1.3,
+      spaceBetween: 16,
+      navigation: {
+        nextEl: '#section-{{ section.id }} .reviews-swiper-next',
+        prevEl: '#section-{{ section.id }} .reviews-swiper-prev'
+      },
+      breakpoints: {
+        640:  { slidesPerView: 2.5,   spaceBetween: 20 },
+        960:  { slidesPerView: 2.5,   spaceBetween: 24 },
+        1280: { slidesPerView: 2.8, spaceBetween: 28 }
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Customer Reviews",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Margins — Desktop"
+    },
+    {
+      "type": "range",
+      "id": "mt_desktop",
+      "label": "Top margin (desktop)",
+      "unit": "px",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "mb_desktop",
+      "label": "Bottom margin (desktop)",
+      "unit": "px",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Margins — Mobile"
+    },
+    {
+      "type": "range",
+      "id": "mt_mobile",
+      "label": "Top margin (mobile)",
+      "unit": "px",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mb_mobile",
+      "label": "Bottom margin (mobile)",
+      "unit": "px",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer Reviews"
+    }
+  ]
+}
+{% endschema %}
