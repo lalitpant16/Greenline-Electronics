@@ -1,0 +1,59 @@
+ <style>
+ .images_swiper_pdp{
+   width: 100%;
+   height: auto;
+  transition: transform 0.2s ease;
+  transform-origin: center center;
+ }
+ .image-zoom-container {
+  position: relative;
+  overflow: hidden;
+}
+.images_custom_pdp .swiper-pagination-bullet-active{
+background-color: #000 !important;
+}
+ </style>
+
+ <div class="images_custom_pdp">
+    <div class="swiper mySwiper_img_pdp">
+      <div class="swiper-wrapper">
+        {% for image in product.images %}
+        <div class="swiper-slide">
+        <img src="{{ image | img_url: 'medium' }}" width="600" height="600" alt="{{ product.title | escape }}" class="images_swiper_pdp" />
+        </div>
+      {% endfor %}
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const swiperEl = new Swiper(".mySwiper_img_pdp", {
+      pagination: {
+        el: ".swiper-pagination",
+        dynamicBullets: true,
+      },
+    });
+  });
+</script>
+
+<script>
+  const slides = document.querySelectorAll('.swiper-slide');
+
+  slides.forEach(slide => {
+    const img = slide.querySelector('.images_swiper_pdp');
+
+    slide.addEventListener('mousemove', (e) => {
+      const rect = slide.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      img.style.transformOrigin = `${x}% ${y}%`;
+      img.style.transform = "scale(2)";
+    });
+
+    slide.addEventListener('mouseleave', () => {
+      img.style.transform = "scale(1)";
+      img.style.transformOrigin = "center center";
+    });
+  });
+</script>
