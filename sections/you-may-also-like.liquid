@@ -1,0 +1,149 @@
+<style>
+  .swiper-button-prev.greenline-swiper-prev,
+  .swiper-button-next.greenline-swiper-next {
+      display: flex;
+      width: unset;
+      height: unset;
+      padding: 10px;
+      position: unset;
+      color: black;
+      border: 1px solid black;
+      border-radius: 50%;
+      z-index: 1;
+  }
+
+  .greenline-swiper-next.swiper-button-next:after,
+  .greenline-swiper-prev.swiper-button-prev:after {
+      content: unset;
+  }
+
+  .head_btn_main {
+      display: flex;
+      justify-content: space-between;
+  }
+
+  .swiper_buttons_main {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+  }
+</style>
+{{ 'component-card.css'      | asset_url | stylesheet_tag }}
+{{ 'component-price.css'     | asset_url | stylesheet_tag }}
+{{ 'component-slider.css'    | asset_url | stylesheet_tag }}
+
+{% if settings.card_style == 'standard' %}
+  {{ 'template-collection.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% if section.settings.image_shape == 'blob' %}
+  {{ 'mask-blobs.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% unless section.settings.quick_add == 'none' %}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-form.js' | asset_url }}" defer></script>
+{% endunless %}
+
+{% if section.settings.quick_add == 'standard' %}
+  <script src="{{ 'quick-add.js' | asset_url }}" defer></script>
+{% elsif section.settings.quick_add == 'bulk' %}
+  <script src="{{ 'quick-add-bulk.js' | asset_url }}" defer></script>
+  <script src="{{ 'quantity-popover.js' | asset_url }}" defer></script>
+  <script src="{{ 'price-per-item.js'  | asset_url }}" defer></script>
+  <script src="{{ 'quick-order-list.js'| asset_url }}" defer></script>
+{% endif %}
+
+{% assign related_products = product.metafields.custom.you_may_also_like_products %}
+{% if related_products != blank %}
+<section class="greenline-related-products page-width" id="Section-{{ section.id }}">
+  <div class="head_btn_main">
+    <h2 class="greenline-related-products__heading">
+      {{ section.settings.heading | default: 'You may also like' }}
+    </h2>
+    <div class="swiper_buttons_main">
+      <div class="swiper-button-prev greenline-swiper-prev">
+        <img src="https://cdn.shopify.com/s/files/1/0693/9885/5871/files/icons8-back-50.png?v=1751403150"
+             alt="{{ section.settings.heading | escape }}"
+             class="image_prev"
+             style="width:15px;height:15px;">
+      </div>
+      <div class="swiper-button-next greenline-swiper-next">
+        <img src="https://cdn.shopify.com/s/files/1/0693/9885/5871/files/icons8-forward-50.png?v=1751403151"
+             alt="{{ section.settings.heading | escape }}"
+             class="image_next"
+             style="width:15px;height:15px;">
+      </div>
+    </div>
+  </div>
+
+  <div class="greenline-product-list">
+    <div class="swiper greenline-swiper">
+      <div class="swiper-wrapper">
+        {% for related_product in related_products.value %}
+          <div class="swiper-slide">
+            <div class="greenline-product-list__item">
+              {% render 'card-product',
+                card_product: related_product,
+                media_aspect_ratio: 'square',
+                show_secondary_image: true,
+                lazy_load: true,
+                quick_add: section.settings.quick_add,  <!-- ★ changed (was true) -->
+                section_id: section.id
+              %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    new Swiper('.greenline-swiper', {
+      slidesPerView: 1.5,
+      spaceBetween: 16,
+      navigation: {
+        nextEl: '.greenline-swiper-next',
+        prevEl: '.greenline-swiper-prev'
+      },
+      breakpoints: {
+        640:  { slidesPerView: 2.2, spaceBetween: 20 },
+        960:  { slidesPerView: 3.5, spaceBetween: 24 },
+        1280: { slidesPerView: 4.2, spaceBetween: 28 }
+      }
+    });
+  });
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "You may also like",
+  "tag": "section",
+  "class": "greenline-section greenline-section--related-products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "select",
+      "id": "quick_add",
+      "label": "Quick add button",
+      "options": [
+        { "value": "none",     "label": "None" },
+        { "value": "standard", "label": "Standard" },
+        { "value": "bulk",     "label": "Bulk" }
+      ],
+      "default": "standard"
+    }
+  ],
+  "presets": [
+    { "name": "You may also like" }
+  ]
+}
+{% endschema %}
