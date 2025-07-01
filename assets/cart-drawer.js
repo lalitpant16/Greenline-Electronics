@@ -47,6 +47,9 @@ class CartDrawer extends HTMLElement {
     );
 
     document.body.classList.add('overflow-hidden');
+    if (typeof window.updateFreeShippingProgress === 'function') {
+      window.updateFreeShippingProgress();
+    }
   }
 
   close() {

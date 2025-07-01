@@ -101,6 +101,9 @@ class CartItems extends HTMLElement {
               targetElement.replaceWith(sourceElement);
             }
           }
+          if (typeof window.updateFreeShippingProgress === 'function') {
+    requestAnimationFrame(window.updateFreeShippingProgress);
+  }
         })
         .catch((e) => {
           console.error(e);
@@ -112,6 +115,9 @@ class CartItems extends HTMLElement {
           const html = new DOMParser().parseFromString(responseText, 'text/html');
           const sourceQty = html.querySelector('cart-items');
           this.innerHTML = sourceQty.innerHTML;
+          if (typeof window.updateFreeShippingProgress === 'function') {
+    requestAnimationFrame(window.updateFreeShippingProgress);
+  }
         })
         .catch((e) => {
           console.error(e);
@@ -188,6 +194,9 @@ class CartItems extends HTMLElement {
               section.selector
             );
           });
+          if (typeof window.updateFreeShippingProgress === 'function') {
+  requestAnimationFrame(window.updateFreeShippingProgress);
+}
           const updatedValue = parsedState.items[line - 1] ? parsedState.items[line - 1].quantity : undefined;
           let message = '';
           if (items.length === parsedState.items.length && updatedValue !== parseInt(quantityElement.value)) {

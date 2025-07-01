@@ -1,0 +1,178 @@
+<style>
+    .discount-wrapper {
+        margin: 1rem 0
+    }
+
+    .discount-title {
+        color: #188038;
+        font-weight: 600;
+        margin-bottom: .5rem
+    }
+
+    .discount-form {
+        position: relative;
+    }
+
+    .discount-input {
+        flex: 1;
+        width: 100%;
+        padding: .5rem 5rem .5rem .75rem;
+        border: 1px solid #cccccc;
+        border-radius: 4px
+    }
+
+    .discount-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0 1.25rem;
+        border: 1px solid #188038;
+        border-left: none;
+        border-radius: 0 4px 4px 0;
+        background: #188038;
+        color: #fff;
+        font-size: .875rem;
+        cursor: pointer
+    }
+
+    .discount-btn[disabled] {
+        opacity: .5;
+        cursor: not-allowed
+    }
+
+    .discount-msg {
+        font-size: .75rem;
+        min-height: 1rem;
+        margin-top: .25rem
+    }
+
+    .discount-msg.error {
+        color: #d93025
+    }
+
+    .discount-msg.ok {
+        color: #188038
+    }
+
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap
+    }
+</style>
+
+<discount-button class="discount-wrapper">
+    <h3 class="discount-title">Apply coupon code</h3>
+
+    <form id="CartDiscountForm" class="discount-form" autocomplete="off">
+        <label for="CartDiscountCode" class="visually-hidden">Discount code</label>
+        <input id="CartDiscountCode" type="text" placeholder="Enter code" class="discount-input">
+        <button id="ApplyCartDiscount" type="submit" class="discount-btn" disabled>Apply</button>
+    </form>
+
+    <p id="CartDiscountMessage" class="discount-msg" aria-live="polite"></p>
+</discount-button>
+
+<script>
+    window.applyCartDiscount = async code => {
+        const msg = document.getElementById('CartDiscountMessage');
+        const btn = document.getElementById('ApplyCartDiscount');
+        if (!code) return;
+
+        btn.disabled = true;
+        msg.textContent = 'Applying…';
+        msg.className = 'discount-msg';
+
+        try {
+            await fetch('/cart/update.js', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ discount: code })
+            });
+
+            const applied = await waitUntilDiscountConfirmed(code, 10, 500);
+
+            if (applied) {
+                msg.textContent = `✓ ${code.toUpperCase()} applied`;
+                msg.classList.add('ok');
+            } else {
+                msg.textContent = 'Please enter a valid code';
+                msg.classList.add('error');
+            }
+
+            await refreshCartDrawerData();
+        } catch {
+            msg.textContent = 'Error – try again';
+            msg.classList.add('error');
+        } finally {
+            btn.disabled = false;
+            toggleApplyBtn();
+        }
+    };
+
+    async function waitUntilDiscountConfirmed(code, attempts, gap) {
+        const c = code.toLowerCase();
+        for (let i = 0; i < attempts; i++) {
+            const cart = await fetch('/cart.js').then(r => r.json());
+            if (cart.discount_applications?.some(a => a.code.toLowerCase() === c)) return true;
+            await new Promise(r => setTimeout(r, gap));
+        }
+        return false;
+    }
+
+    function toggleApplyBtn() {
+        const i = document.getElementById('CartDiscountCode');
+        const b = document.getElementById('ApplyCartDiscount');
+        if (i && b) b.disabled = i.value.trim() === '';
+    }
+
+    function initCartDiscountForm() {
+        const f = document.getElementById('CartDiscountForm');
+        if (!f) return;
+        const i = f.querySelector('#CartDiscountCode');
+        const m = document.getElementById('CartDiscountMessage');
+
+        f.addEventListener('submit', e => {
+            e.preventDefault();
+            window.applyCartDiscount(i.value.trim());
+        });
+
+        i.addEventListener('input', () => {
+            toggleApplyBtn();
+            m.textContent = '';
+            m.className = 'discount-msg';
+        });
+
+        toggleApplyBtn();
+    }
+
+    async function refreshCartDrawerData() {
+        const cur = document.querySelector('cart-drawer');
+        if (!cur) return;
+
+        const open = cur.classList.contains('is-open') || cur.classList.contains('active') || cur.hasAttribute('open');
+
+        const r = await fetch(`${routes.cart_url}?sections=cart-drawer&sections_url=${encodeURIComponent(location.pathname)}`);
+        const html = (await r.json())['cart-drawer'];
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const fresh = doc.querySelector('cart-drawer');
+        if (!fresh) return;
+
+        fresh.className = cur.className;
+        fresh.style.cssText = cur.style.cssText;
+        if (open) { fresh.classList.add('is-open', 'active'); fresh.setAttribute('open', '') }
+
+        cur.replaceWith(fresh);
+        if (open && typeof fresh.open === 'function') fresh.open();
+
+        window.updateFreeShippingProgress?.();
+        initCartDiscountForm();
+    }
+
+    document.addEventListener('DOMContentLoaded', initCartDiscountForm);
+</script>

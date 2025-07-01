@@ -1449,6 +1449,16 @@
         "id": "cart_color_scheme",
         "label": "t:sections.all.colors.label",
         "default": "scheme-1"
+      },
+      {
+        "type": "header",
+        "content": "Free shipping"
+      },
+      {
+        "type": "number",
+        "id": "free_shipping",
+        "label": "Free Shipping Threshold",
+        "default": 5000
       }
     ]
   }
