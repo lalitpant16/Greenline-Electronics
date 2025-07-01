@@ -29,6 +29,9 @@ height: 19px;
     gap: 29px;
     padding-top: 7px;
 }
+.logo_footer_main img{
+  max-width: 100px;
+}
 .footer__content-top {
   display: flex !important;
   flex-direction: row-reverse;
