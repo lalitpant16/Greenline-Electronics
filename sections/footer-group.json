@@ -18,28 +18,36 @@
           "type": "link_list",
           "settings": {
             "heading": "Quick links",
-            "menu": "footer"
+            "menu": "company"
           }
         },
         "link_list_Y8qjke": {
           "type": "link_list",
           "settings": {
             "heading": "Quick links",
-            "menu": "footer"
+            "menu": "stores"
           }
         },
         "link_list_WR4ygp": {
           "type": "link_list",
           "settings": {
             "heading": "Quick links",
-            "menu": "footer"
+            "menu": "policies"
+          }
+        },
+        "link_list_arPHdE": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Quick links",
+            "menu": "contact"
           }
         }
       },
       "block_order": [
         "link_list_8DXnnG",
         "link_list_Y8qjke",
-        "link_list_WR4ygp"
+        "link_list_WR4ygp",
+        "link_list_arPHdE"
       ],
       "settings": {
         "color_scheme": "scheme-2",
