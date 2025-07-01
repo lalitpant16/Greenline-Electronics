@@ -17,28 +17,28 @@
         "link_list_8DXnnG": {
           "type": "link_list",
           "settings": {
-            "heading": "Quick links",
+            "heading": "COMPANY",
             "menu": "company"
           }
         },
         "link_list_Y8qjke": {
           "type": "link_list",
           "settings": {
-            "heading": "Quick links",
+            "heading": "STORES",
             "menu": "stores"
           }
         },
         "link_list_WR4ygp": {
           "type": "link_list",
           "settings": {
-            "heading": "Quick links",
+            "heading": "POLICIES",
             "menu": "policies"
           }
         },
         "link_list_arPHdE": {
           "type": "link_list",
           "settings": {
-            "heading": "Quick links",
+            "heading": "CONTACT",
             "menu": "contact"
           }
         }
