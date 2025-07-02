@@ -3,6 +3,8 @@
 HTML and Css are changed for header and footer
 Js is written to open and close menu on hover
 
+-----------------+-------------------+--------------------+----------------------------+------------------------+----------------
+
 2. Product Image Carousel
 
 Purpose: Enhance the product page with a Swiper-powered image carousel, replacing Dawn's default gallery.
@@ -42,6 +44,8 @@ Dependencies
 {{ 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css' | stylesheet_tag }}
 {{ 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js' | script_tag }}
 
+-----------------+-------------------+--------------------+----------------------------+------------------------+----------------
+
 3. Customer Reviews Section
 
 PurposeDisplay product-specific reviews using a metafield.
@@ -64,6 +68,8 @@ Section: sections/product-customer-reviews.liquid
 
 Supports responsive margin settings
 
+-----------------+-------------------+--------------------+----------------------------+------------------------+----------------
+
 4. “You May Also Like” Section
 
 PurposeDisplay manually selected product recommendations using a metafield.
@@ -81,6 +87,8 @@ Implementation
 Section: sections/you-may-also-like.liquid
 
 Uses default product-card snippet (supports swatches, badges, quick add)
+
+-----------------+-------------------+--------------------+----------------------------+------------------------+----------------
 
 5. Free‑Shipping Progress Bar
 
@@ -101,6 +109,8 @@ A JS function updateFreeShippingProgress() should:
 Recalculate bar width on item add/remove
 
 Run on quantity update or cart refresh
+
+-----------------+-------------------+--------------------+----------------------------+------------------------+----------------
 
 6. Custom Discount Field
 
