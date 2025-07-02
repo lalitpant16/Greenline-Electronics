@@ -131,14 +131,19 @@
         if (i && b) b.disabled = i.value.trim() === '';
     }
 
-    function initCartDiscountForm() {
-        console.log("test-----------")
+    window.initCartDiscountForm = function () {
         const f = document.getElementById('CartDiscountForm');
         if (!f) return;
+
         const i = f.querySelector('#CartDiscountCode');
         const m = document.getElementById('CartDiscountMessage');
 
-        f.addEventListener('submit', e => {
+        function toggleApplyBtn() {
+            const btn = f.querySelector('[type="submit"]');
+            if (btn) btn.disabled = i.value.trim() === '';
+        }
+
+        f.addEventListener('submit', (e) => {
             e.preventDefault();
             window.applyCartDiscount(i.value.trim());
         });
@@ -148,12 +153,11 @@
             m.textContent = '';
             m.className = 'discount-msg';
         });
-
         toggleApplyBtn();
-    }
+    };
+
 
     async function refreshCartDrawerData() {
-        initCartDiscountForm();
         const cur = document.querySelector('cart-drawer');
         if (!cur) return;
 
@@ -173,9 +177,10 @@
         if (open && typeof fresh.open === 'function') fresh.open();
 
         window.updateFreeShippingProgress?.();
-        initCartDiscountForm();
+        window.initCartDiscountForm();
     }
 
-    document.addEventListener('DOMContentLoaded', initCartDiscountForm);
-    document.addEventListener('DOMContentLoaded', refreshCartDrawerData);
+    document.addEventListener('DOMContentLoaded', function () {
+        window.initCartDiscountForm();
+    });
 </script>

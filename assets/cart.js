@@ -104,6 +104,7 @@ class CartItems extends HTMLElement {
           if (typeof window.updateFreeShippingProgress === 'function') {
     requestAnimationFrame(window.updateFreeShippingProgress);
   }
+  window.initCartDiscountForm();
         })
         .catch((e) => {
           console.error(e);
@@ -118,6 +119,7 @@ class CartItems extends HTMLElement {
           if (typeof window.updateFreeShippingProgress === 'function') {
     requestAnimationFrame(window.updateFreeShippingProgress);
   }
+  window.initCartDiscountForm();
         })
         .catch((e) => {
           console.error(e);
@@ -197,6 +199,7 @@ class CartItems extends HTMLElement {
           if (typeof window.updateFreeShippingProgress === 'function') {
   requestAnimationFrame(window.updateFreeShippingProgress);
 }
+window.initCartDiscountForm();
           const updatedValue = parsedState.items[line - 1] ? parsedState.items[line - 1].quantity : undefined;
           let message = '';
           if (items.length === parsedState.items.length && updatedValue !== parseInt(quantityElement.value)) {

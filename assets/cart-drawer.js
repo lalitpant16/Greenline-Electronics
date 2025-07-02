@@ -50,6 +50,7 @@ class CartDrawer extends HTMLElement {
     if (typeof window.updateFreeShippingProgress === 'function') {
       window.updateFreeShippingProgress();
     }
+    window.initCartDiscountForm();
   }
 
   close() {
