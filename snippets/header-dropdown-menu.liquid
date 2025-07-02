@@ -1,53 +1,28 @@
+
 <style>
-details[id^="Details-HeaderMenu-"] {
-  position: static;              
+details[id^="Details-HeaderSubMenu-"] {
+  position: relative;
 }
-details[id^="Details-HeaderMenu-"] > ul {
 
-  position: fixed;
-  top: var(--header-height, 64px);  
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80vw;
-  height: 80vh;
-  overflow-y: auto;
-  background: var(--color-background, #fff);
-  border: 1px solid rgba(0,0,0,.06);
-  border-radius: 8px;
-  padding: 2rem;
-  box-shadow: 0 8px 24px rgba(0,0,0,.08);
-  display: none;                    
-  z-index: 999;
-}
-details[id^="Details-HeaderMenu-"][open] > ul { display: block; }
-
-details[id^="Details-HeaderSubMenu-"] { position: relative; }
 details[id^="Details-HeaderSubMenu-"] > ul {
   position: absolute;
-  top: 0;
-  left: 100%;
-  min-width: 220px;
-  margin-left: 0;
-  background: #ffffff;
-  border: 1px solid rgba(0,0,0,.06);
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.05);
-  pointer-events: auto;
-  z-index: 10;
-  display: none;
+  top: 0;                
+  left: 100%;                  
+  margin-left: 0;               
+  min-width: 220px;            
+  z-index: 10;                  
+  box-shadow: 0 4px 8px rgba(0,0,0,.06); 
+  pointer-events: auto;         
 }
-details[id^="Details-HeaderSubMenu-"][open] > ul { display: block; }
+
 details[id^="Details-HeaderSubMenu-"] > ul::before {
   content: '';
   position: absolute;
-  right: 100%;
   top: 0;
-  width: 8px;
+  right: 100%;
+  width: 8px;             
   height: 100%;
 }
-
-.header__submenu a { display: block; padding: .4rem 1rem; }
-.header__submenu a:hover { background: rgba(0,0,0,.04); }
 </style>
 
 <nav class="header__inline-menu" role="navigation">
@@ -56,7 +31,10 @@ details[id^="Details-HeaderSubMenu-"] > ul::before {
       <li>
         {%- if link.links != blank -%}
           <header-menu>
-            <details id="Details-HeaderMenu-{{ forloop.index }}">
+            <details
+              id="Details-HeaderMenu-{{ forloop.index }}"
+              class="Details-HeaderMenu-custom"
+            >
               <summary
                 id="HeaderMenu-{{ link.handle }}"
                 class="header__menu-item list-menu__item link focus-inset"
@@ -66,12 +44,11 @@ details[id^="Details-HeaderSubMenu-"] > ul::before {
                 <span{% if link.child_active %} class="header__active-menu-item"{% endif %}>
                   {{ link.title | escape }}
                 </span>
-                {{- 'icon-caret.svg' | inline_asset_content -}}
               </summary>
 
               <ul
                 id="HeaderMenu-MenuList-{{ forloop.index }}"
-                class="header__submenu list-menu color-{{ section.settings.menu_color_scheme }} caption-large motion-reduce"
+                class="header__submenu list-menu list-menu--disclosure color-{{ section.settings.menu_color_scheme }} gradient caption-large motion-reduce global-settings-popup"
                 role="menu"
                 tabindex="-1"
               >
@@ -91,12 +68,11 @@ details[id^="Details-HeaderSubMenu-"] > ul::before {
                       <details id="Details-HeaderSubMenu-{{ link.handle }}-{{ childlink.handle }}">
                         <summary
                           id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
-                          class="header__menu-item link list-menu__item focus-inset caption-large"
+                          class="header__menu-item link link--text list-menu__item focus-inset caption-large"
                           aria-haspopup="menu"
                           aria-expanded="false"
                         >
                           <span>{{ childlink.title | escape }}</span>
-                          {{- 'icon-caret.svg' | inline_asset_content -}}
                         </summary>
 
                         <ul
@@ -144,23 +120,23 @@ details[id^="Details-HeaderSubMenu-"] > ul::before {
 </nav>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const allDetails = document.querySelectorAll(
-    'details[id^="Details-HeaderMenu-"], details[id^="Details-HeaderSubMenu-"]'
-  );
+  document.addEventListener('DOMContentLoaded', () => {
+    const allDetails = document.querySelectorAll(
+      'details[id^="Details-HeaderMenu-"], details[id^="Details-HeaderSubMenu-"]'
+    );
 
-  allDetails.forEach(detailsEl => {
-    detailsEl.addEventListener('mouseenter', () => {
-      detailsEl.setAttribute('open', '');
-      const summary = detailsEl.querySelector('summary');
-      if (summary) summary.setAttribute('aria-expanded', 'true');
-    });
+    allDetails.forEach(detailsEl => {
+      detailsEl.addEventListener('mouseenter', () => {
+        detailsEl.setAttribute('open', '');
+        const summary = detailsEl.querySelector('summary');
+        if (summary) summary.setAttribute('aria-expanded', 'true');
+      });
 
-    detailsEl.addEventListener('mouseleave', () => {
-      detailsEl.removeAttribute('open');
-      const summary = detailsEl.querySelector('summary');
-      if (summary) summary.setAttribute('aria-expanded', 'false');
+      detailsEl.addEventListener('mouseleave', () => {
+        detailsEl.removeAttribute('open');
+        const summary = detailsEl.querySelector('summary');
+        if (summary) summary.setAttribute('aria-expanded', 'false');
+      });
     });
   });
-});
 </script>
