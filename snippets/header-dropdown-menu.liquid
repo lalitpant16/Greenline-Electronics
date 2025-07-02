@@ -1,19 +1,11 @@
-{%- comment -%}
-  Snippet: header-mega-menu
-  * Top‑level <details> opens on hover as an 80 vw × 80 vh panel.
-  * Nested <details> inside the panel fly out to the right.
-{%- endcomment -%}
-
-{%-* --------------  CSS  -------------- *-%}
 <style>
-/* === 1 | MEGA PANEL (top‑level) ================================ */
 details[id^="Details-HeaderMenu-"] {
-  position: static;                 /* keep normal flow; panel is fixed */
+  position: static;              
 }
 details[id^="Details-HeaderMenu-"] > ul {
-  /* big centred panel */
+
   position: fixed;
-  top: var(--header-height, 64px);  /* sits just below your header   */
+  top: var(--header-height, 64px);  
   left: 50%;
   transform: translateX(-50%);
   width: 80vw;
@@ -24,12 +16,11 @@ details[id^="Details-HeaderMenu-"] > ul {
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 8px 24px rgba(0,0,0,.08);
-  display: none;                    /* hidden until <details open>   */
+  display: none;                    
   z-index: 999;
 }
 details[id^="Details-HeaderMenu-"][open] > ul { display: block; }
 
-/* === 2 | FLY‑OUT FOR NESTED SUB‑MENUS ========================== */
 details[id^="Details-HeaderSubMenu-"] { position: relative; }
 details[id^="Details-HeaderSubMenu-"] > ul {
   position: absolute;
@@ -46,7 +37,6 @@ details[id^="Details-HeaderSubMenu-"] > ul {
   display: none;
 }
 details[id^="Details-HeaderSubMenu-"][open] > ul { display: block; }
-/* buffer strip prevents accidental close when moving cursor */
 details[id^="Details-HeaderSubMenu-"] > ul::before {
   content: '';
   position: absolute;
@@ -56,19 +46,16 @@ details[id^="Details-HeaderSubMenu-"] > ul::before {
   height: 100%;
 }
 
-/* === 3 | BASIC RESETS (optional, tweak to match theme) ========= */
 .header__submenu a { display: block; padding: .4rem 1rem; }
 .header__submenu a:hover { background: rgba(0,0,0,.04); }
 </style>
 
-{%-* --------------  MARKUP  -------------- *-%}
 <nav class="header__inline-menu" role="navigation">
   <ul class="list-menu list-menu--inline" role="list">
     {%- for link in section.settings.menu.links -%}
       <li>
         {%- if link.links != blank -%}
           <header-menu>
-            <!-- ── TOP‑LEVEL DROPDOWN ─────────────────────────────── -->
             <details id="Details-HeaderMenu-{{ forloop.index }}">
               <summary
                 id="HeaderMenu-{{ link.handle }}"
@@ -82,7 +69,6 @@ details[id^="Details-HeaderSubMenu-"] > ul::before {
                 {{- 'icon-caret.svg' | inline_asset_content -}}
               </summary>
 
-              <!-- ── MEGA PANEL CONTENT ───────────────────────────── -->
               <ul
                 id="HeaderMenu-MenuList-{{ forloop.index }}"
                 class="header__submenu list-menu color-{{ section.settings.menu_color_scheme }} caption-large motion-reduce"
@@ -102,7 +88,6 @@ details[id^="Details-HeaderSubMenu-"] > ul::before {
                         {{ childlink.title | escape }}
                       </a>
                     {%- else -%}
-                      <!-- ── SECOND‑LEVEL DROPDOWN (flies out right) ── -->
                       <details id="Details-HeaderSubMenu-{{ link.handle }}-{{ childlink.handle }}">
                         <summary
                           id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
@@ -142,7 +127,6 @@ details[id^="Details-HeaderSubMenu-"] > ul::before {
             </details>
           </header-menu>
         {%- else -%}
-          <!-- ── SIMPLE LINK ─────────────────────────────────────── -->
           <a
             id="HeaderMenu-{{ link.handle }}"
             href="{{ link.url }}"
@@ -159,10 +143,8 @@ details[id^="Details-HeaderSubMenu-"] > ul::before {
   </ul>
 </nav>
 
-{%-* --------------  JAVASCRIPT  -------------- *-%}
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  /* Hover‑to‑open for top‑level mega panels and nested fly‑outs */
   const allDetails = document.querySelectorAll(
     'details[id^="Details-HeaderMenu-"], details[id^="Details-HeaderSubMenu-"]'
   );
