@@ -131,3 +131,13 @@ Implementation Notes
 Snippet: snippets/cart-drawer-discount.liquid
 
 
+-----------------+-------------------+--------------------+----------------------------+------------------------+----------------
+
+
+Faced some issues on discount section on the cart drawer, where the cart was not updating at the time of applying the coupon code, i took help from various docs, AI Tools like chat GPT.
+
+
+-----------------+-------------------+--------------------+----------------------------+------------------------+----------------
+
+
+
