@@ -132,6 +132,7 @@
     }
 
     function initCartDiscountForm() {
+        console.log("test-----------")
         const f = document.getElementById('CartDiscountForm');
         if (!f) return;
         const i = f.querySelector('#CartDiscountCode');
@@ -152,6 +153,7 @@
     }
 
     async function refreshCartDrawerData() {
+        initCartDiscountForm();
         const cur = document.querySelector('cart-drawer');
         if (!cur) return;
 
@@ -175,4 +177,5 @@
     }
 
     document.addEventListener('DOMContentLoaded', initCartDiscountForm);
+    document.addEventListener('DOMContentLoaded', refreshCartDrawerData);
 </script>
