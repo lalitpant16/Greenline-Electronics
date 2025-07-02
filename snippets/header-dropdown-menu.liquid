@@ -1,34 +1,92 @@
-{% comment %}
-  Renders a standard dropdown style menu for the header.
+{%- comment -%}
+  Snippet: header-mega-menu
+  * Top‑level <details> opens on hover as an 80 vw × 80 vh panel.
+  * Nested <details> inside the panel fly out to the right.
+{%- endcomment -%}
 
-  Usage:
-  {% render 'header-dropdown-menu' %}
-{% endcomment %}
+{%-* --------------  CSS  -------------- *-%}
+<style>
+/* === 1 | MEGA PANEL (top‑level) ================================ */
+details[id^="Details-HeaderMenu-"] {
+  position: static;                 /* keep normal flow; panel is fixed */
+}
+details[id^="Details-HeaderMenu-"] > ul {
+  /* big centred panel */
+  position: fixed;
+  top: var(--header-height, 64px);  /* sits just below your header   */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80vw;
+  height: 80vh;
+  overflow-y: auto;
+  background: var(--color-background, #fff);
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  display: none;                    /* hidden until <details open>   */
+  z-index: 999;
+}
+details[id^="Details-HeaderMenu-"][open] > ul { display: block; }
 
-<nav class="header__inline-menu">
+/* === 2 | FLY‑OUT FOR NESTED SUB‑MENUS ========================== */
+details[id^="Details-HeaderSubMenu-"] { position: relative; }
+details[id^="Details-HeaderSubMenu-"] > ul {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  min-width: 220px;
+  margin-left: 0;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.05);
+  pointer-events: auto;
+  z-index: 10;
+  display: none;
+}
+details[id^="Details-HeaderSubMenu-"][open] > ul { display: block; }
+/* buffer strip prevents accidental close when moving cursor */
+details[id^="Details-HeaderSubMenu-"] > ul::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 0;
+  width: 8px;
+  height: 100%;
+}
+
+/* === 3 | BASIC RESETS (optional, tweak to match theme) ========= */
+.header__submenu a { display: block; padding: .4rem 1rem; }
+.header__submenu a:hover { background: rgba(0,0,0,.04); }
+</style>
+
+{%-* --------------  MARKUP  -------------- *-%}
+<nav class="header__inline-menu" role="navigation">
   <ul class="list-menu list-menu--inline" role="list">
     {%- for link in section.settings.menu.links -%}
       <li>
         {%- if link.links != blank -%}
           <header-menu>
+            <!-- ── TOP‑LEVEL DROPDOWN ─────────────────────────────── -->
             <details id="Details-HeaderMenu-{{ forloop.index }}">
               <summary
                 id="HeaderMenu-{{ link.handle }}"
                 class="header__menu-item list-menu__item link focus-inset"
+                aria-haspopup="menu"
+                aria-expanded="false"
               >
-                <span
-                  {%- if link.child_active %}
-                    class="header__active-menu-item"
-                  {% endif %}
-                >
-                  {{- link.title | escape -}}
+                <span{% if link.child_active %} class="header__active-menu-item"{% endif %}>
+                  {{ link.title | escape }}
                 </span>
                 {{- 'icon-caret.svg' | inline_asset_content -}}
               </summary>
+
+              <!-- ── MEGA PANEL CONTENT ───────────────────────────── -->
               <ul
                 id="HeaderMenu-MenuList-{{ forloop.index }}"
-                class="header__submenu list-menu list-menu--disclosure color-{{ section.settings.menu_color_scheme }} gradient caption-large motion-reduce global-settings-popup"
-                role="list"
+                class="header__submenu list-menu color-{{ section.settings.menu_color_scheme }} caption-large motion-reduce"
+                role="menu"
                 tabindex="-1"
               >
                 {%- for childlink in link.links -%}
@@ -38,24 +96,29 @@
                         id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
                         href="{{ childlink.url }}"
                         class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"
-                        {% if childlink.current %}
-                          aria-current="page"
-                        {% endif %}
+                        role="menuitem"
+                        {% if childlink.current %} aria-current="page"{% endif %}
                       >
                         {{ childlink.title | escape }}
                       </a>
                     {%- else -%}
+                      <!-- ── SECOND‑LEVEL DROPDOWN (flies out right) ── -->
                       <details id="Details-HeaderSubMenu-{{ link.handle }}-{{ childlink.handle }}">
                         <summary
                           id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
-                          class="header__menu-item link link--text list-menu__item focus-inset caption-large"
+                          class="header__menu-item link list-menu__item focus-inset caption-large"
+                          aria-haspopup="menu"
+                          aria-expanded="false"
                         >
                           <span>{{ childlink.title | escape }}</span>
                           {{- 'icon-caret.svg' | inline_asset_content -}}
                         </summary>
+
                         <ul
-                          id="HeaderMenu-SubMenuList-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
+                          id="HeaderMenu-SubMenuList-{{ link.handle }}-{{ childlink.handle }}"
                           class="header__submenu list-menu motion-reduce"
+                          role="menu"
+                          tabindex="-1"
                         >
                           {%- for grandchildlink in childlink.links -%}
                             <li>
@@ -63,9 +126,8 @@
                                 id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
                                 href="{{ grandchildlink.url }}"
                                 class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if grandchildlink.current %} list-menu__item--active{% endif %}"
-                                {% if grandchildlink.current %}
-                                  aria-current="page"
-                                {% endif %}
+                                role="menuitem"
+                                {% if grandchildlink.current %} aria-current="page"{% endif %}
                               >
                                 {{ grandchildlink.title | escape }}
                               </a>
@@ -80,20 +142,15 @@
             </details>
           </header-menu>
         {%- else -%}
+          <!-- ── SIMPLE LINK ─────────────────────────────────────── -->
           <a
             id="HeaderMenu-{{ link.handle }}"
             href="{{ link.url }}"
             class="header__menu-item list-menu__item link link--text focus-inset"
-            {% if link.current %}
-              aria-current="page"
-            {% endif %}
+            {% if link.current %} aria-current="page"{% endif %}
           >
-            <span
-              {%- if link.current %}
-                class="header__active-menu-item"
-              {% endif %}
-            >
-              {{- link.title | escape -}}
+            <span{% if link.current %} class="header__active-menu-item"{% endif %}>
+              {{ link.title | escape }}
             </span>
           </a>
         {%- endif -%}
@@ -101,3 +158,27 @@
     {%- endfor -%}
   </ul>
 </nav>
+
+{%-* --------------  JAVASCRIPT  -------------- *-%}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  /* Hover‑to‑open for top‑level mega panels and nested fly‑outs */
+  const allDetails = document.querySelectorAll(
+    'details[id^="Details-HeaderMenu-"], details[id^="Details-HeaderSubMenu-"]'
+  );
+
+  allDetails.forEach(detailsEl => {
+    detailsEl.addEventListener('mouseenter', () => {
+      detailsEl.setAttribute('open', '');
+      const summary = detailsEl.querySelector('summary');
+      if (summary) summary.setAttribute('aria-expanded', 'true');
+    });
+
+    detailsEl.addEventListener('mouseleave', () => {
+      detailsEl.removeAttribute('open');
+      const summary = detailsEl.querySelector('summary');
+      if (summary) summary.setAttribute('aria-expanded', 'false');
+    });
+  });
+});
+</script>
