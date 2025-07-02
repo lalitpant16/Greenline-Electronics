@@ -1,4 +1,9 @@
-1. Product Image Carousel
+1. Header and Footer
+
+HTML and Css are changed for header and footer
+Js is written to open and close menu on hover
+
+2. Product Image Carousel
 
 Purpose: Enhance the product page with a Swiper-powered image carousel, replacing Dawn's default gallery.
 
@@ -37,7 +42,7 @@ Dependencies
 {{ 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css' | stylesheet_tag }}
 {{ 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js' | script_tag }}
 
-2. Customer Reviews Section
+3. Customer Reviews Section
 
 PurposeDisplay product-specific reviews using a metafield.
 
@@ -51,19 +56,15 @@ Type: List (Single line text)
 
 Format: Name##Review text##Rating
 
-Example
+Example: Lalit##This is an awesome product##5
 
-Lalit##This is an awesome product##5
-
-Notes
-
-Rating (1–5) is rendered as filled stars
+Notes: Rating (1–5) is rendered as filled stars
 
 Section: sections/product-customer-reviews.liquid
 
 Supports responsive margin settings
 
-3. “You May Also Like” Section
+4. “You May Also Like” Section
 
 PurposeDisplay manually selected product recommendations using a metafield.
 
@@ -81,7 +82,7 @@ Section: sections/you-may-also-like.liquid
 
 Uses default product-card snippet (supports swatches, badges, quick add)
 
-4. Free‑Shipping Progress Bar
+5. Free‑Shipping Progress Bar
 
 PurposeShow visual progress toward a free-shipping threshold in the cart drawer.
 
@@ -101,7 +102,7 @@ Recalculate bar width on item add/remove
 
 Run on quantity update or cart refresh
 
-5. Custom Discount Field
+6. Custom Discount Field
 
 PurposeProvide a clean coupon input inside the cart drawer with instant feedback and validation.
 
@@ -117,6 +118,6 @@ Updates cart drawer on apply
 
 Implementation Notes
 
-Snippet: snippets/discount-field.liquid
+Snippet: snippets/cart-drawer-discount.liquid
 
-Place below subtotal in cart drawer
+
